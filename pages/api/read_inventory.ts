@@ -8,6 +8,5 @@ export default async function readInventory(req: NextApiRequest, res: NextApiRes
     let queryString = `SELECT * FROM finalTable`;
     const [inventory] = await conn.query(queryString).catch(err => {throw err});
     res.json(inventory);
-    console.log(inventory);
     
 }

@@ -22,6 +22,7 @@ export default function InventoryForm(): JSX.Element {
     const [readInventoryItems, setReadInventoryItems] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
+    const [deleteId, setDeleteId] = useState(null);
 
     
     
@@ -38,7 +39,6 @@ export default function InventoryForm(): JSX.Element {
             .catch(function (error) {
                 console.log(error);
             });
-        // readInventory();
 
     }
     
@@ -46,26 +46,23 @@ export default function InventoryForm(): JSX.Element {
         axios.get('http://localhost:3000/api/read_inventory')
             .then(response => {
                 console.log('success');
-                // console.log(response);
                 setReadInventoryItems(response.data);
             })
             .catch(function (error) {
                 console.log(error);
             });
-
     }
     useEffect(() => {
         readInventory();
     },[])
  
    
-    // console.log(readInventoryItems);
+ console.log(readInventoryItems);
 
     const handleEdit = (e, x) => {
         e.preventDefault();
         setIsEditing(true);
         setEditData(x);
-        // console.log(editData);
 
     }
     const changeEdit = ()=> {
@@ -73,11 +70,31 @@ export default function InventoryForm(): JSX.Element {
         setIsEditing(false);
                 
     }
+    const handleDelete = (e, x)=> {
+        e.preventDefault();
+        console.log(x.id);
+        axios.delete(`http://localhost:3000/api/delete_inventory/`, {data: x})
+        .then(response => {
+            setDeleteId(response.data.id);
+            readInventoryItems.filter(item => item.id !== deleteId)  
+         readInventory();
+        })
+        .catch(function (error) {
+            console.log(error);
+        }); 
+        const deletedId = deleteId;
+        
+    }
+  
+  
+  
+   
 
     return (
         <div>
             
             <div>
+                <h1> Inventory Items </h1>                
                 <Table
                     aria-label="Example table with static content"
                     css={{
@@ -90,6 +107,7 @@ export default function InventoryForm(): JSX.Element {
                         <Table.Column>Quantity</Table.Column>
                         <Table.Column>Rate</Table.Column>
                         <Table.Column>Edit</Table.Column>
+                        <Table.Column>Delete</Table.Column>
                     </Table.Header>
                     <Table.Body>
                          {readInventory ? readInventoryItems.map((x, i) => (
@@ -98,8 +116,10 @@ export default function InventoryForm(): JSX.Element {
                                 <Table.Cell>{x.newQuantity}</Table.Cell>
                                 <Table.Cell>{x.newRate}</Table.Cell>
                                 <Table.Cell>
-                                    {/* {x.newQuantity && x.newRate && x.id !== null ? <button onClick={(e: any,) => handleEdit(e, x)}>Edit</button> : ''} */}
                                     <button onClick={(e: any,) => handleEdit(e, x)}>Edit</button> 
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <button onClick={(e: any,) => handleDelete(e, x)}>Delete</button>
                                 </Table.Cell>
                             </Table.Row>)):<></>
                         } 
@@ -107,6 +127,7 @@ export default function InventoryForm(): JSX.Element {
                 </Table>
                 {isEditing ? <EditForm editData = {editData} changeEdit = {changeEdit} readInventoryItems = {readInventoryItems} readInventory = {readInventory}/> : <form>
                     <div>
+                        <h2> Add a new product</h2>
                         <div>Product name</div>
                         <div>
                             <input type="text" placeholder="name" onChange={e => setItem({ ...item, name: e.target.value })} />
