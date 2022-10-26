@@ -12,7 +12,6 @@ const deleteItem = async (id) => {
     await conn.query('DELETE FROM finalTable WHERE id = ?', [id])
 }
 
-
 export default async function InventoryHandler(req: NextApiRequest, res: NextApiResponse) {
     const {
       query: { id },

@@ -1,0 +1,18 @@
+
+GET (http://localhost:3000/api/inventory
+arraye of objects -- code 200.
+
+http://localhost:3000/api/inventory/:id)
+single object -- code 200
+404(if id doesn't exist)
+POST (http://localhost:3000/api/inventory)
+Created object with it's id.(double check, 201/202)
+400 if invalid with a JSON error.
+PUT(http://localhost:3000/api/inventory/{id})
+updated object with 200
+If ID doesn't match then 404.400 if invalid with a JSON error.
+DELETE
+http://localhost:3000/api/inventory/
+{id}
+200 -- if sucessful.
+404 -- if ID doesn't match.

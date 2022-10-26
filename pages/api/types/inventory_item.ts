@@ -1,10 +1,10 @@
-import InventoryForm from "../../components/inventory_form";
+import InventoryForm from "../../components/inventory_list";
 
 interface InventoryItem {
-    id?: Number;
-    newName: string;
-    newQuantity: Number;
-    newRate: Number
+    id?: number;
+    name: string;
+    quantity: number;
+    rate: number
 }
 
 export default InventoryItem;

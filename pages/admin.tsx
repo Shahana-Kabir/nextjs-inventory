@@ -1,9 +1,9 @@
-import InventoryForm from "./components/inventory_form";
+import InventoryList from "./components/inventory_list";
 
 export default function Admin() {
   return (
     <div> 
-      <InventoryForm />     
+      <InventoryList />
     </div>
   )
 }

@@ -3,14 +3,9 @@ import axios from "axios"
 import InventoryItem from "../api/types/inventory_item";
 // import ReactTable from "react-table";
 import { blue, Table } from '@nextui-org/react';
-import ReactPaginate from 'react-paginate';
-import uuid from 'react-uuid';
-import EditForm from './editForm';
-import { json } from "stream/consumers";
-import { isAnyArrayBuffer } from "util/types";
+import EditForm from './edit_form';
 
-
-export default function InventoryForm(): JSX.Element {
+export default function InventoryList(): JSX.Element {
 
     const [item, setItem] = useState({
         name: "",
@@ -19,10 +14,17 @@ export default function InventoryForm(): JSX.Element {
 
     });
    
-    const [readInventoryItems, setReadInventoryItems] = useState([]);
+    const [readInventoryItems, setReadInventoryItems] = useState<Array<InventoryItem>>([]);
     const [isEditing, setIsEditing] = useState(false);
-    const [editData, setEditData] = useState({});
+    const [editData, setEditData] = useState<InventoryItem>({
+        id: null,
+        name: "",
+        quantity: null,
+        rate: null
+    });
     const [deleteId, setDeleteId] = useState(null);
+     const [searchProduct, setSearchProduct] = useState('');
+    const [isSearch, setIsSearch] = useState(false);
 
     
     
@@ -59,16 +61,20 @@ export default function InventoryForm(): JSX.Element {
    
  console.log(readInventoryItems);
 
-    const handleEdit = (e, x) => {
+    const handleEdit = (e, x: InventoryItem) => {
         e.preventDefault();
         setIsEditing(true);
         setEditData(x);
-
     }
     const changeEdit = ()=> {
         console.log('inside change edit');
         setIsEditing(false);
                 
+    }
+
+    const onUpdate = () : void => {
+        changeEdit()
+        readInventory()
     }
     const handleDelete = (e, x)=> {
         e.preventDefault();
@@ -86,7 +92,11 @@ export default function InventoryForm(): JSX.Element {
         
     }
   
-  
+  const handleSearch = (e)=> {
+      setSearchProduct(e.target.value)
+      console.log(searchProduct);
+
+  }
   
    
 
@@ -94,14 +104,47 @@ export default function InventoryForm(): JSX.Element {
         <div>
             
             <div>
-                <h1> Inventory Items </h1>                
-                <Table
-                    aria-label="Example table with static content"
-                    css={{
-                        height: "auto",
-                        minWidth: "100%",
-                        color: "blue"
-                    }}>
+                <div className = "title">
+                    <h1 className = "title_mainTitle"> Inventory Items </h1>
+                    <div className = "title_search">
+                        <input  placeholder = "search" type = "text" />
+                    </div>
+                    
+                </div>
+                  
+                <style jsx>
+                    {
+                        `
+                        .title {
+                            margin-left : 25rem;
+                            display: flex;
+                            
+                        }
+                        .title_search {
+                            margin-top: 2rem
+                        }
+                        .title_mainTitle {
+                            margin-right:2rem
+                        }
+                        .form{
+                            margin-left : 27rem;
+                            margin-top: 0.25rem;
+                        
+                        }
+                        h2{
+                            margin-left: 25rem;
+                            margin-top: 5rem;
+                        }
+                        .form_button{
+                            margin-left : 27rem;
+                            margin-top: 1rem;
+                        }
+                       
+                        
+                        `
+                    }           </style> 
+
+                <Table >
                     <Table.Header>
                         <Table.Column>Product Name</Table.Column>
                         <Table.Column>Quantity</Table.Column>
@@ -112,11 +155,11 @@ export default function InventoryForm(): JSX.Element {
                     <Table.Body>
                          {readInventory ? readInventoryItems.map((x, i) => (
                             <Table.Row key={i}>
-                                <Table.Cell>{x.newName}</Table.Cell>
-                                <Table.Cell>{x.newQuantity}</Table.Cell>
-                                <Table.Cell>{x.newRate}</Table.Cell>
+                                <Table.Cell>{x.name}</Table.Cell>
+                                <Table.Cell>{x.quantity}</Table.Cell>
+                                <Table.Cell>{x.rate}</Table.Cell>
                                 <Table.Cell>
-                                    <button onClick={(e: any,) => handleEdit(e, x)}>Edit</button> 
+                                    <button onClick={(e:any,) => handleEdit(e, x)}>Edit</button> 
                                 </Table.Cell>
                                 <Table.Cell>
                                     <button onClick={(e: any,) => handleDelete(e, x)}>Delete</button>
@@ -125,27 +168,28 @@ export default function InventoryForm(): JSX.Element {
                         } 
                     </Table.Body>
                 </Table>
-                {isEditing ? <EditForm editData = {editData} changeEdit = {changeEdit} readInventoryItems = {readInventoryItems} readInventory = {readInventory}/> : <form>
-                    <div>
+                {isEditing ? <EditForm inventoryItem = {editData} onUpdate = {onUpdate}/> : <form>
+                    
                         <h2> Add a new product</h2>
+                        <div className = "form">
                         <div>Product name</div>
-                        <div>
+                        <div className = "form_input">
                             <input type="text" placeholder="name" onChange={e => setItem({ ...item, name: e.target.value })} />
                         </div>
                     </div>
-                    <div>
+                    <div className = "form">
                         <div> Quantity</div>
                         <div>
-                            <input type="number" placeholder="" onChange={e => setItem({ ...item, quantity: parseInt(e.target.value, 10) })} />
+                            <input className = "form_input" type="number" placeholder="quantity" onChange={e => setItem({ ...item, quantity: parseInt(e.target.value, 10) })} />
                         </div>
                     </div>
-                    <div>
+                    <div className = "form">
                         <div>Rate</div>
                         <div>
-                            <input type="number" placeholder="" onChange={e => setItem({ ...item, rate: parseInt(e.target.value, 10) })} />
+                            <input className = "form_input" type="number" placeholder="rate" onChange={e => setItem({ ...item, rate: parseInt(e.target.value, 10) })} />
                         </div>
                     </div>
-                    <button type = 'submit' onClick={submitItem}>Save</button>
+                    <button className ="form_button" type = 'submit' onClick={submitItem}>Save</button>
                 </form>}
 
 
