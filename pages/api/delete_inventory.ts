@@ -1,15 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "../../node_modules/next/dist/shared/lib/utils";
 import connection from './mysql';
+import InventoryItem from "./types/inventory_item";
 
-interface InventoryItem {
-    id?: Number;
-    newName: string;
-    newQuantity: Number;
-    newRate: Number
-}
 const deleteItem = async (id) => {
     const conn = await connection();
-    await conn.query('DELETE FROM finalTable WHERE id = ?', [id])
+    await conn.query('DELETE FROM inventoryItems WHERE id = ?', [id])
 }
 export default async function deleteInventory(req: NextApiRequest, res: NextApiResponse) {
     console.log(req.body);

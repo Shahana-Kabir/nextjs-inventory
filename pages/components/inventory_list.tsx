@@ -30,9 +30,9 @@ export default function InventoryList(): JSX.Element {
     
     const submitItem = (e: any) => {
         e.preventDefault();
-        const newData = { newName: item.name, newQuantity: item.quantity, newRate: item.rate };
+        const newItem = { name: item.name, quantity: item.quantity, rate: item.rate };
 
-        axios.post('http://localhost:3000/api/create_inventory', newData)
+        axios.post('http://localhost:3000/api/create_inventory', newItem)
             .then(function (response) {
                 console.log('success');
                 readInventory();
@@ -105,10 +105,10 @@ export default function InventoryList(): JSX.Element {
             
             <div>
                 <div className = "title">
-                    <h1 className = "title_mainTitle"> Inventory Items </h1>
-                    <div className = "title_search">
+                    <h1 className = "title_mainTitle"> Grocery Items </h1>
+                    {/* <div className = "title_search">
                         <input  placeholder = "search" type = "text" />
-                    </div>
+                    </div> */}
                     
                 </div>
                   
