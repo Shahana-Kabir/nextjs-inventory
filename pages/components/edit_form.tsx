@@ -16,10 +16,10 @@ const EditForm = (props: EditFormProps) => {
         quantity: props.inventoryItem.quantity,
         rate: props.inventoryItem.rate
     })
-    
+    // http://localhost:3000/api/edit_inventory
     const updateEditedData =(e)=> {
         e.preventDefault();
-        axios.put('http://localhost:3000/api/edit_inventory', changeRow)
+        axios.put('http://localhost:3000/api/inventory/inventory', changeRow)
         .then(function (response) {
             console.log('success');
             console.log(response.data);
